@@ -1,12 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BrickBreaker.Levels;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text.Json;
+using System.IO;
+using System.Reflection;
 
-namespace CasseBriques
+namespace BrickBreaker
 {
     class SceneGameplay : Scene
     {
@@ -17,9 +18,10 @@ namespace CasseBriques
         const int nbRows = 20;
         private int[,] Level;
         private List<Brick> lstBricks;
+        private readonly Score score = new Score();
 
         public SceneGameplay(Game game) : base(game)
-        {            
+        {
             Ball = new Ball(game.Content.Load<Texture2D>("balle"), Screen);
             Pad = new Pad(game.Content.Load<Texture2D>("raquette"), Screen);
             
@@ -37,26 +39,26 @@ namespace CasseBriques
 
             Level = new int[,]
             {
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0},
-                {1,0,0,0,0,0,0,0,0,0,0},
-                {3,1,0,0,0,0,0,0,0,0,0},
-                {3,2,1,0,0,0,0,0,0,0,0},
-                {3,2,4,1,0,0,0,0,0,0,0},
-                {3,2,4,5,1,0,0,0,0,0,0},
-                {3,2,4,5,3,1,0,0,0,0,0},
-                {3,2,4,5,3,2,1,0,0,0,0},
-                {3,2,4,5,3,2,4,1,0,0,0},
-                {3,2,4,5,3,2,4,5,1,0,0},
-                {3,2,4,5,3,2,4,5,3,1,0},
-                {3,2,4,5,3,2,4,5,3,2,1},
-                {7,6,8,9,7,6,8,9,7,6,8}
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 0,0,0,0,0,0,0,0,0,0,0},
+                { 1,0,0,0,0,0,0,0,0,0,0},
+                { 3,1,0,0,0,0,0,0,0,0,0},
+                { 3,2,1,0,0,0,0,0,0,0,0},
+                { 3,2,4,1,0,0,0,0,0,0,0},
+                { 3,2,4,5,1,0,0,0,0,0,0},
+                { 3,2,4,5,3,1,0,0,0,0,0},
+                { 3,2,4,5,3,2,1,0,0,0,0},
+                { 3,2,4,5,3,2,4,1,0,0,0},
+                { 3,2,4,5,3,2,4,5,1,0,0},
+                { 3,2,4,5,3,2,4,5,3,1,0},
+                { 3,2,4,5,3,2,4,5,3,2,1},
+                { 7,6,8,9,7,6,8,9,7,6,8}
             };
 
             lstBricks = new List<Brick>();
@@ -81,25 +83,37 @@ namespace CasseBriques
                 }
             }
         }
-
-        private void LoadLevel(int levelNum, int[,] level)
+        
+        public void LoadLevel(int levelNum, int[,] plevel)
         {
+            string jsonDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Levels");
+            Debug.WriteLine("Load Scene Game");
+            var level = new LevelJSON();
+
             for (int l = 0; l < nbRows-1; l++)
             {
                 for (int c = 0; c < nbColums-1; c++)
                 {
-                    Console.WriteLine(Level[l,c]);
-                    Level[l,c] = level[l,c];
+                    Level[l,c] = plevel[l,c];
                 }
             }
         }
 
 
-        public override void Update() 
+        public override void Update(GameTime gameTime) 
         {
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            var inputs = ServiceLocator.Get<IInputs>();
+            var sceneManager = ServiceLocator.Get<ISceneManager>();
+            if (inputs.IsJustPressed(Keys.Escape))
             {
+                sceneManager.Load(typeof(SceneMenu));
+            }
+            base.Update(gameTime);
+            LoadLevel(1, Level);
+            
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                BallStick = false;
             }
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -166,6 +180,7 @@ namespace CasseBriques
             {
                 brick.Draw(batch);
             }
+            score.Display(batch);
         }
     }
 }

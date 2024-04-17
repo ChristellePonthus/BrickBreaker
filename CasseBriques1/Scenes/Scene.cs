@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace CasseBriques
+namespace BrickBreaker
 {
     public abstract class Scene
     {
@@ -20,9 +20,16 @@ namespace CasseBriques
             random = new Random();
         }
 
-        public abstract void Update();
+        public virtual void Load()
+        {
+
+        }
+        public virtual void Update(GameTime gameTime)
+        {
+
+        }
         public abstract void DrawScene(SpriteBatch batch);
-        public void Draw(SpriteBatch batch) 
+        public virtual void Draw(SpriteBatch batch) 
         {
             batch.Begin();
             batch.Draw(textureFond, new Vector2(0, 0), Color.White);
@@ -37,6 +44,11 @@ namespace CasseBriques
             else batch.Begin();
             DrawScene(batch);
             batch.End();
+        }
+
+        public virtual void Unload()
+        {
+
         }
     }
 }

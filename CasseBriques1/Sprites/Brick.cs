@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace CasseBriques
+namespace BrickBreaker
 {
     public class Brick : Sprite
     {
@@ -25,6 +25,8 @@ namespace CasseBriques
         {
             fall = true;
             Velocity = new Vector2(Velocity.X, 1);
+            IServiceScore serviceScore = ServiceLocator.Get<IServiceScore>();
+            if(serviceScore != null) serviceScore.Add(10);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasseBriques
+namespace BrickBreaker
 {
     class SceneGameOver : Scene
     {
@@ -15,7 +15,7 @@ namespace CasseBriques
 
         }
 
-        public override void Update() { }
+        public override void Update(GameTime gameTime) { }
 
         public override void DrawScene(SpriteBatch batch)
         {

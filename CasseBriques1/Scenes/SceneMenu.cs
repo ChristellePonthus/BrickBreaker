@@ -1,26 +1,34 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CasseBriques
+namespace BrickBreaker
 {
     class SceneMenu : Scene
     {
-        SpriteFont MenuFont;
-        public SceneMenu(Game game) : base(game)
-        {
-            MenuFont = Game.Content.Load<SpriteFont>("PixelFont");
-        }
+        public SceneMenu(Game game) : base(game) { }
 
-        public override void Update() { }
+        public override void Load()
+        {
+            Console.WriteLine("Load Scene Menu");
+            base.Load();
+        }
+        public override void Update(GameTime gameTime) 
+        {
+            var inputs = ServiceLocator.Get<IInputs>();
+            var sceneManager = ServiceLocator.Get<ISceneManager>();
+            if (inputs.IsJustPressed(Keys.Space))
+            {
+                sceneManager.Load(typeof(SceneGameplay));
+            }
+            base.Update(gameTime);
+        }
 
         public override void DrawScene(SpriteBatch batch) 
         {
-            batch.DrawString(MenuFont, "Menu", new Vector2(2, 2), Color.White);
+            SpriteFont font = ServiceLocator.Get<IFont>().GetFont();
+            batch.DrawString(font, "Menu", new Vector2(2, 2), Color.White);
         }
     }
 }

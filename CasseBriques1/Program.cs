@@ -1,3 +1,3 @@
 ﻿
-using var game = new CasseBriques.GameCasseBriques();
+using var game = new BrickBreaker.BrickBreakerGame();
 game.Run();

@@ -1,13 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace CasseBriques
+namespace BrickBreaker
 {
-    public sealed class Screen
+    public interface IScreen
+    {
+
+    }
+    public sealed class Screen : IScreen
     {
         private GraphicsDeviceManager _graphicsDeviceManager;
         public Screen(GraphicsDeviceManager graphicsDeviceManager)
         {
             _graphicsDeviceManager = graphicsDeviceManager;
+            ServiceLocator.Register<IScreen>(this);
         }
         public float Width => _graphicsDeviceManager.PreferredBackBufferWidth;
         public float Height => _graphicsDeviceManager.PreferredBackBufferHeight;

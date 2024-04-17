@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasseBriques
+namespace BrickBreaker
 {
     public class Pad : Sprite
     {
