@@ -11,7 +11,6 @@ namespace BrickBreaker
 
         public override void Load()
         {
-            Console.WriteLine("Load Scene Menu");
             base.Load();
         }
         public override void Update(GameTime gameTime) 
@@ -27,8 +26,9 @@ namespace BrickBreaker
 
         public override void DrawScene(SpriteBatch batch) 
         {
-            SpriteFont font = ServiceLocator.Get<IFont>().GetFont();
-            batch.DrawString(font, "Menu", new Vector2(2, 2), Color.White);
+            SpriteFont myFont = AssetsManager.mainFont;
+            batch.DrawString(myFont, "Menu", new Vector2(200, 200), Color.White);
+            batch.DrawString(myFont, "Press SPACE to play", new Vector2(100, 250), Color.White);
         }
     }
 }

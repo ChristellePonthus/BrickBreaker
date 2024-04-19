@@ -1,18 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace BrickBreaker.Scenes
 {
-    internal class SceneVictory : Scene
+    public class SceneGameBreak : Scene
     {
-        public SceneVictory(Game game) : base(game) { }
-
-        public override void Load()
+        public SceneGameBreak(Game game) : base(game)
         {
-            base.Load();
         }
+
         public override void Update(GameTime gameTime)
         {
             var inputs = ServiceLocator.Get<IInputs>();
@@ -21,19 +18,19 @@ namespace BrickBreaker.Scenes
             {
                 sceneManager.Load(typeof(SceneGameplay));
             }
-            if (inputs.IsJustPressed(Keys.Escape))
+            if (inputs.IsPressed(Keys.Escape))
             {
                 sceneManager.Load(typeof(SceneMenu));
             }
+
             base.Update(gameTime);
         }
 
         public override void DrawScene(SpriteBatch batch)
         {
-            SpriteFont myFont = AssetsManager.mainFont; ;
-            batch.DrawString(myFont, "Win !!", new Vector2(200, 200), Color.White);
-            batch.DrawString(myFont, "Press SPACE to play again", new Vector2(150, 250), Color.White);
-            batch.DrawString(myFont, "Press ESC to return to the main menu", new Vector2(100, 350), Color.White);
+            SpriteFont myFont = AssetsManager.mainFont;
+            batch.DrawString(myFont, "Do you want to return to Menu? (press ESC)", new Vector2(200, 200), Color.White);
+            batch.DrawString(myFont, "Or continue the game? (press SPACE)", new Vector2(200, 250), Color.White);
         }
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace BrickBreaker
 {
@@ -21,7 +20,6 @@ namespace BrickBreaker
         }
         public void Register(Scene scene)
         {
-            Console.WriteLine(scene.GetType());
             _scenes.Add(scene.GetType(), scene);
         }
         public void Load(Type sceneType)
@@ -35,6 +33,13 @@ namespace BrickBreaker
             _currentScene.Load();
         }
 
+        public void Unload(Type sceneType)
+        {
+            if (_currentScene != null)
+            {
+                _scenes[sceneType] = null;
+            }
+        }
         public void Update(GameTime gameTime)
         {
             if (_currentScene != null) _currentScene.Update(gameTime);

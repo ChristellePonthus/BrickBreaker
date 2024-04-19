@@ -1,11 +1,10 @@
-﻿using BrickBreaker.Levels;
+﻿using BrickBreaker.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Text;
+using System.Reflection;
 
 namespace BrickBreaker
 {
@@ -16,12 +15,6 @@ namespace BrickBreaker
         private Inputs _inputs;
         private SceneManager _sceneManager;
         private Screen _screen;
-        private Assets _assets;
-        Font myFonts;
-        SceneMenu MySceneMenu;
-        SceneGameplay MySceneGameplay;
-        Scene CurrentScene;
-
 
         public BrickBreakerGame()
         {
@@ -38,7 +31,6 @@ namespace BrickBreaker
             _screen = new Screen(_graphics);
             _inputs = new Inputs();
             _sceneManager = new SceneManager();
-            _assets = new Assets(Content);
 
             base.Initialize();
         }
@@ -46,22 +38,14 @@ namespace BrickBreaker
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            AssetsManager.FontLoad(Content);
 
             _sceneManager.Register(new SceneMenu(this));
             _sceneManager.Register(new SceneGameplay(this));
-
-
+            _sceneManager.Register(new SceneVictory(this));
+            _sceneManager.Register(new SceneGameOver(this));
+            _sceneManager.Register(new SceneGameBreak(this));
             _sceneManager.Load(typeof(SceneMenu));
-
-            myFonts = new Font();
-            SpriteFont fontGame = Content.Load<SpriteFont>("PixelFont");
-            myFonts.SetFont(fontGame);
-
-
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText("Levels/Level_1.json")));
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(LevelJSON));
-            LevelJSON level1 = (LevelJSON)ser.ReadObject(stream);
-            Console.WriteLine("Test : " + level1);
         }
 
         protected override void UnloadContent()
@@ -69,16 +53,13 @@ namespace BrickBreaker
             base.UnloadContent();
         }
 
+        protected void UpdateGameplay(GameTime gameTime)
+        {
+        }
+
         protected override void Update(GameTime gameTime)
         {
             _sceneManager.Update(gameTime);
-            if (_inputs.IsJustPressed(Keys.Space))
-            {
-                CurrentScene = MySceneGameplay;
-            }
-            _inputs.UpdateKeyboardState();
-
-
             base.Update(gameTime);
         }
 

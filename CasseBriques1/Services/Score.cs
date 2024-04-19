@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Diagnostics;
 
 namespace BrickBreaker
 {
@@ -31,12 +29,8 @@ namespace BrickBreaker
         }
         public void Display(SpriteBatch batch)
         {
-            IFont fontServ = ServiceLocator.Get<IFont>();
-            if (fontServ != null)
-            {
-                SpriteFont font = fontServ.GetFont();
-                batch.DrawString(font, "Score : " + Get().ToString(), new Vector2(1, 1), Color.White);
-            }
+            SpriteFont myFont = AssetsManager.mainFont;
+            batch.DrawString(myFont, "Score : " + Get().ToString(), new Vector2(2, 2), Color.White);
         }
     }
 }

@@ -12,7 +12,6 @@ namespace BrickBreaker
             _listServices[typeof(T)] = service; // = listServices.Add(typeof(T), service);
         }
 
-        // Retourner le service
         public static T Get<T>()
         {
             return (T)_listServices[typeof(T)];

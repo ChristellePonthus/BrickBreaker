@@ -5,7 +5,7 @@ namespace BrickBreaker
     public interface IInputs
     {
         bool IsJustPressed(Keys key);
-        bool IsPresssed(Keys key);
+        bool IsPressed(Keys key);
     }
     public sealed class Inputs : IInputs
     {
@@ -25,7 +25,7 @@ namespace BrickBreaker
             return Keyboard.GetState().IsKeyDown(key) && _oldKeybordState.IsKeyUp(key);
         }
 
-        public bool IsPresssed(Keys key)
+        public bool IsPressed(Keys key)
         {
             return Keyboard.GetState().IsKeyDown(key);
         }
