@@ -2,16 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization.Json;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
 
 namespace BrickBreaker
 {
@@ -31,24 +22,29 @@ namespace BrickBreaker
         public SceneGameplay(Game game) : base(game)
         {
             level = new Level(1);
+            InitGame(game);
+        }
 
+        public void InitGame(Game game)
+        {
+            _timer = 3000;
             ball = new Ball(game.Content.Load<Texture2D>("balle"), Screen);
             pad = new Pad(game.Content.Load<Texture2D>("raquette"), Screen);
 
             vortex1 = new Vortex(game.Content.Load<Texture2D>("vortex"), Screen);
-            vortex1.SetPosition(new Vector2(Screen.Width - 50,20));
+            vortex1.SetPosition(new Vector2(Screen.Width - 50, 20));
             vortex2 = new Vortex(game.Content.Load<Texture2D>("vortex"), Screen);
-            vortex2.SetPosition(new Vector2(150,Screen.Height - 200));
+            vortex2.SetPosition(new Vector2(150, Screen.Height - 200));
 
             pad.SetPosition(new Vector2(
-                Screen.Width / 2 - pad.HalfWidth, 
+                Screen.Width / 2 - pad.HalfWidth,
                 Screen.Height - pad.Height));
 
             ball.SetPosition(new Vector2(
-                pad.Centre - ball.HalfWidth, 
+                pad.Centre - ball.HalfWidth,
                 pad.Position.Y - pad.Height));
 
-            ball.Velocity = new Vector2(5, -5);
+            ball.Velocity = new Vector2(10, -10);
 
             ballStick = true;
 
@@ -75,10 +71,16 @@ namespace BrickBreaker
                 }
             }
         }
+    
+        public override void Load()
+        {
+            InitGame(Game);
+            base.Load();
+        }
 
         public override void Update(GameTime gameTime)
         {
-            /*_timer -= 1;*/
+            _timer -= 1;
             var inputs = ServiceLocator.Get<IInputs>();
             var sceneManager = ServiceLocator.Get<ISceneManager>();
             if (inputs.IsJustPressed(Keys.Enter))
@@ -171,7 +173,8 @@ namespace BrickBreaker
                 if (level.levelNum == 1)
                 {
                     _lstBricks.Clear();
-                    level.levelNum = 2;
+                    level = new Level(2);
+                    InitGame(Game);
                 }
                 else
                 {
@@ -198,8 +201,9 @@ namespace BrickBreaker
                 brick.Draw(batch);
             }
             _score.Display(batch);
-            batch.DrawString(font, "Timer : " + _timer, new Vector2(2, 25), Microsoft.Xna.Framework.Color.White);
-            batch.DrawString(font, "Press ENTER to PAUSE", new Vector2(280, 2), Microsoft.Xna.Framework.Color.White);
+            batch.DrawString(font, "Timer : " + _timer, new Vector2(2, 25), Color.White);
+            batch.DrawString(font, "Level : " + level.levelNum.ToString(), new Vector2(2, 50), Color.White);
+            batch.DrawString(font, "Press ENTER to PAUSE", new Vector2(280, 2), Color.White);
         }
     }
 }
